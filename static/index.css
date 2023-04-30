@@ -21,15 +21,22 @@ body {
 }
 
 .message {
-  background-color: #f1f1f1;
+  background: rgb(20,208,196);
+  background: linear-gradient(125deg, rgba(20,208,196,0.8) 0%, rgba(9,62,121,0.8016456582633054) 54%, rgba(48,25,180,0.8) 100%);
   border-radius: 5px;
   margin-bottom: 0.5rem;
   padding: 0.5rem;
+  color: white;
 }
 
 .message-username {
   font-weight: bold;
   margin-bottom: 0.2rem;
+}
+
+.message-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .form-container {
@@ -41,23 +48,32 @@ body {
 
 
 .messageBox {
-  border: 1px solid #ccc;
+  background-color: mediumblue;
+  color: white;
+  border: 1px solid black;
   border-radius: 3px;
   width: 80%;
+  min-width: 80%;
+  max-width: 80%;
   height: 50px;
+  min-height: 50px;
+  max-height: 50px;
   margin: 30px;
 }
 
 
 .submitButton {
-  background-color: #4CAF50;
+  background-color: black;
   border: none;
   color: white;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
   border-radius: 10px;
-  width: 100px;
-  height: 35px;
-  font-size: 16px;
-  margin-bottom: 50px;
+  width: 150px;
+  height: 50px;
+  font-size: 26px;
+  margin-bottom: 75px;
+}
+
+.loggedInAs {
+  color: white;
+  margin: 10px;
 }

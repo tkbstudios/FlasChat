@@ -13,6 +13,9 @@ app.config['MYSQL_USER'] = 'flaschat'
 app.config['MYSQL_PASSWORD'] = 'h8r9BKbFNvEgYxS'
 app.config['MYSQL_DB'] = 'message_db'
 
+MAX_MSG_LEN = 500
+MAX_USERNAME_LEN = 13
+
 
 mysql = MySQL(app)
 
@@ -36,14 +39,18 @@ def login():
         password = request.form['password']
         hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, hashed_password))
-        user = cur.fetchone()
-        cur.close()
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, hashed_password))
+            user = cur.fetchone()
+            cur.close()
+        except Exception:
+            print("Error logging in")
+            flash("Could not login!")
 
         if user:
             session['username'] = username
-            return redirect(url_for('index', username=username))
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password')
         
@@ -87,6 +94,8 @@ def handle_send_message(data):
     if 'username' not in session:
         return
     if content == "": return
+    if len(content) > MAX_MSG_LEN:
+        emit('send_error', {'error': f"Length over {MAX_MSG_LEN} characters", 'content': content}, broadcast=True, json=True)
     cur = mysql.connection.cursor()
     cur.execute('INSERT INTO messages (username, content) VALUES (%s, %s)', (username, content))
     mysql.connection.commit()

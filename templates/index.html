@@ -13,19 +13,23 @@
     <script>
         const username = '{{ username }}';
     </script>
+    <label class="loggedInAs">Logged in as {{ username }}</label>
     <div class="container">
         <div class="messages">
             {% for message in messages %}
                 <div class="message">
                     <div class="message-username">{{ message[1] }}</div>
-                    <div>{{ message[2] }}</div>
+                    <div class="message-content">{{ message[2] }}</div>
                 </div>
             {% endfor %}
         </div>
-        <form>
-            <textarea id="content" name="content" placeholder="Message" class="messageBox"></textarea>
-            <input type="submit" value="Send" class="submitButton">
+        <form id="sendMessageForm">
+            <textarea id="content" name="content" placeholder="Message" class="messageBox" style="resize: none;"></textarea>
+            <input type="submit" value="Send" class="submitButton" id="sendButton">
         </form>
     </div>
+    {% if username == "tkbstudios" %}
+    {% endif %}
+
 </body>
 </html>
