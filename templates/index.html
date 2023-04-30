@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title>Chat App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+</head>
+<body>
+    {% if not username %}
+        <meta http-equiv="Refresh" content="0; url='/login'" />
+    {% endif %}
+    <script>
+        const username = '{{ username }}';
+    </script>
+    <div class="container">
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">
+                    <div class="message-username">{{ message[1] }}</div>
+                    <div>{{ message[2] }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <form>
+            <textarea id="content" name="content" placeholder="Message" class="messageBox"></textarea>
+            <input type="submit" value="Send" class="submitButton">
+        </form>
+    </div>
+</body>
+</html>
