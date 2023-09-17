@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 </head>
 <body>
     {% if not username %}

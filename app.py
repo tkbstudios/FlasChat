@@ -16,7 +16,6 @@ app.config['MYSQL_DB'] = 'message_db'
 MAX_MSG_LEN = 500
 MAX_USERNAME_LEN = 13
 
-
 mysql = MySQL(app)
 
 socketio = SocketIO(app)
@@ -31,6 +30,7 @@ def index():
     messages = cur.fetchall()
     cur.close()
     return render_template('index.html', messages=messages[::-1], username=session['username'])
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -53,9 +53,10 @@ def login():
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password')
-        
+
     elif request.method == 'GET':
         return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -75,17 +76,20 @@ def register():
             # Insert new user into database
             hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
             cur = mysql.connection.cursor()
-            cur.execute('INSERT INTO users (username, password, email) VALUES (%s, %s, %s)', (username, hashed_password, email))
+            cur.execute('INSERT INTO users (username, password, email) VALUES (%s, %s, %s)',
+                        (username, hashed_password, email))
             mysql.connection.commit()
             cur.close()
             return redirect("/login")
 
     return render_template('register.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
 
 @socketio.on('send_message')
 def handle_send_message(data):
@@ -95,12 +99,14 @@ def handle_send_message(data):
         return
     if content == "": return
     if len(content) > MAX_MSG_LEN:
-        emit('send_error', {'error': f"Length over {MAX_MSG_LEN} characters", 'content': content}, broadcast=True, json=True)
+        emit('send_error', {'error': f"Length over {MAX_MSG_LEN} characters", 'content': content}, broadcast=True,
+             json=True)
     cur = mysql.connection.cursor()
     cur.execute('INSERT INTO messages (username, content) VALUES (%s, %s)', (username, content))
     mysql.connection.commit()
     cur.close()
     emit('receive_message', {'username': username, 'content': content}, broadcast=True, json=True)
 
+
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host="0.0.0.0")
+    socketio.run(app, debug=False, host="0.0.0.0", port=5000)
